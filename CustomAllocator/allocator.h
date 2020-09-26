@@ -5,8 +5,9 @@
 #include "../Comms/IPC/Client.h"
 
 int g_memory_used{0};
-//extern IPCClient myClient;
+
 static IPCClient myClient;
+
 template <typename T>
 class CustomAllocator : public std::allocator<T>
 {
@@ -69,3 +70,15 @@ operator!=(CustomAllocator<T> const& x, CustomAllocator<U> const& y) noexcept
 {
     return !(x == y);
 }
+
+// Macros
+#define SINGLE_ARG(...) __VA_ARGS__
+
+#ifdef DEBUG_MEMORY
+#define VECTOR(type, name, params) std::vector<type, CustomAllocator<type>> name({params}, (CustomAllocator<type>(#name)) );
+typedef std::basic_string<char, std::char_traits<char>, CustomAllocator<char>> customAllocatorString;
+#define STRING(name, contents) customAllocatorString name({contents}, CustomAllocator<char>(#name));
+#else
+#define VECTOR(type, name, params) std::vector<type> name {params};
+#define STRING(name, contents) std::string name {contents};
+#endif

@@ -3,13 +3,13 @@
 #include <iostream>
 #include <string>
 #include <scoped_allocator>
-#include "Comms/IPC/Client.h"
+
 
 int main()
 {
     std::cout << "== Vector ==" << std::endl;
-    std::vector<int> normalVector({1, 2, 3});
-    std::vector<int, CustomAllocator<int>> myVector( {1, 2, 3}, (CustomAllocator<int>("Small Vector")) );
+    VECTOR(int, myVector, SINGLE_ARG())
+    //std::cout << myVector[1] << std::endl;
     myVector.push_back(2);
     for (int i = 0; i < 10; i++)
     {
@@ -18,11 +18,10 @@ int main()
 
     std::cout << "== End Vector ==" << std::endl;
 
-    typedef std::basic_string<char, std::char_traits<char>, CustomAllocator<char>> customAllocatorString;
-
     std::cout << "== String ==" << std::endl;
     
-    customAllocatorString myString(CustomAllocator<char>("String"));
+    STRING(myString, "asdf")
+    std::cout << myString << std::endl;
     for (int i = 0; i < 100; i++)
     {
         myString += "a";
