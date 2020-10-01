@@ -8,7 +8,7 @@
 int main()
 {
     std::cout << "== Vector ==" << std::endl;
-    VECTOR(int, myVector, SINGLE_ARG())
+    VECTOR(int, myVector)
     //std::cout << myVector[1] << std::endl;
     myVector.push_back(2);
     for (int i = 0; i < 10; i++)

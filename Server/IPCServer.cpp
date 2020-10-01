@@ -57,6 +57,7 @@ IPCServer::IPCServer()
 
 int main()
 {
+    std::cout << "Starting IPC server" << std::endl;
     IPCServer startServer;
 }
 

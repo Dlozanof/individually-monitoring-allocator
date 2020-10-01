@@ -1,12 +1,16 @@
+#ifndef BBA0470B_F3D3_40F2_B6A7_9A46206F4F33
+#define BBA0470B_F3D3_40F2_B6A7_9A46206F4F33
 #include <memory>
 #include <iostream>
 #include <iomanip>
 #include <string>
-#include "../Comms/IPC/Client.h"
+//#include "../Comms/IPC/Client.h"
+#include "../Comms/IClient.h"
 
+#ifdef DEBUG_MEMORY
 int g_memory_used{0};
-
-static IPCClient myClient;
+extern IClient myClient;
+#endif
 
 template <typename T>
 class CustomAllocator : public std::allocator<T>
@@ -16,8 +20,9 @@ class CustomAllocator : public std::allocator<T>
         using Pointer = typename std::allocator_traits<Base>::pointer;
         using SizeType = typename std::allocator_traits<Base>::size_type;
         std::string name_;
+#ifdef DEBUG_MEMORY
         int l_memory_used{0};
-        
+#endif
     
     public:
         CustomAllocator() = delete;
@@ -32,6 +37,7 @@ class CustomAllocator : public std::allocator<T>
 
         Pointer allocate(SizeType n)
         {
+#ifdef DEBUG_MEMORY
             g_memory_used += n * sizeof(T);
             l_memory_used += n * sizeof(T);
             std::cout << "[ " << std::setw(15)  << "Allocated" << " ]" <<
@@ -40,11 +46,13 @@ class CustomAllocator : public std::allocator<T>
                 "Total -> " << std::left << std::setw(15) << g_memory_used << " Bytes | " << 
                 name_ << std::endl;
             myClient.NewData(name_, true, l_memory_used, g_memory_used);
+#endif
             return Base::allocate(n);
         }
 
         void deallocate(Pointer p, SizeType n)
         {
+#ifdef DEBUG_MEMORY
             g_memory_used -= n * sizeof(T);
             l_memory_used -= n * sizeof(T);
             std::cout << "[ " << std::setw(15)  << "Deallocated" << " ]" <<
@@ -53,6 +61,7 @@ class CustomAllocator : public std::allocator<T>
                 "Total -> " << std::left << std::setw(15) << g_memory_used << " Bytes | " <<
                 name_ << std::endl;
             myClient.NewData(name_, false, l_memory_used, g_memory_used);
+#endif
             Base::deallocate(p, n);
         }
 };
@@ -74,11 +83,8 @@ operator!=(CustomAllocator<T> const& x, CustomAllocator<U> const& y) noexcept
 // Macros
 #define SINGLE_ARG(...) __VA_ARGS__
 
-#ifdef DEBUG_MEMORY
-#define VECTOR(type, name, params) std::vector<type, CustomAllocator<type>> name({params}, (CustomAllocator<type>(#name)) );
+#define VECTOR(type, name) std::vector<type, CustomAllocator<type>> name(CustomAllocator<type>(#name));
+#define VECTOR_P(type, name, params) std::vector<type, CustomAllocator<type>> name({params}, (CustomAllocator<type>(#name)) );
 typedef std::basic_string<char, std::char_traits<char>, CustomAllocator<char>> customAllocatorString;
 #define STRING(name, contents) customAllocatorString name({contents}, CustomAllocator<char>(#name));
-#else
-#define VECTOR(type, name, params) std::vector<type> name {params};
-#define STRING(name, contents) std::string name {contents};
-#endif
+#endif /* BBA0470B_F3D3_40F2_B6A7_9A46206F4F33 */

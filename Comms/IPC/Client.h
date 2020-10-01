@@ -11,16 +11,16 @@
 #include <string>
 #include <fstream>
 #include <chrono>
+#include "../IClient.h"
 
 auto start = std::chrono::steady_clock::now();
 
-class IPCClient
+class IPCClient : public IClient
 {
     public:
         IPCClient();
         ~IPCClient();
         void NewData(std::string id, bool data, int local, int global);
-        void Finished();
     
     private:
         std::string myfifo = "/tmp/AllocatorFifo";
