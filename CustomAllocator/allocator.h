@@ -1,15 +1,14 @@
-#ifndef BBA0470B_F3D3_40F2_B6A7_9A46206F4F33
-#define BBA0470B_F3D3_40F2_B6A7_9A46206F4F33
+#ifndef CUSTOMALLOCATOR_ALLOCATOR
+#define CUSTOMALLOCATOR_ALLOCATOR
 #include <memory>
 #include <iostream>
 #include <iomanip>
 #include <string>
-//#include "../Comms/IPC/Client.h"
-#include "../Comms/IClient.h"
+#include "Comms/IPC/Client.h"
 
 #ifdef DEBUG_MEMORY
 int g_memory_used{0};
-extern IClient myClient;
+extern IPCClient myClient;
 #endif
 
 template <typename T>
@@ -87,4 +86,4 @@ operator!=(CustomAllocator<T> const& x, CustomAllocator<U> const& y) noexcept
 #define VECTOR_P(type, name, params) std::vector<type, CustomAllocator<type>> name({params}, (CustomAllocator<type>(#name)) );
 typedef std::basic_string<char, std::char_traits<char>, CustomAllocator<char>> customAllocatorString;
 #define STRING(name, contents) customAllocatorString name({contents}, CustomAllocator<char>(#name));
-#endif /* BBA0470B_F3D3_40F2_B6A7_9A46206F4F33 */
+#endif /* CUSTOMALLOCATOR_ALLOCATOR */

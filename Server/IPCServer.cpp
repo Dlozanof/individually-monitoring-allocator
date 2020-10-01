@@ -59,6 +59,9 @@ int main()
 {
     std::cout << "Starting IPC server" << std::endl;
     IPCServer startServer;
+    std::cout << "Processing data" << std::endl;
+    //std::ifstream data("output.csv", std::ifstream::in);
+    
 }
 
 #endif /* CBF5B947_7045_4B4D_9570_FC7726DA7345 */

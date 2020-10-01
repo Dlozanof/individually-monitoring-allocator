@@ -1,12 +1,14 @@
 cc_library(
     name = "individual-monitoring-allocator-IPC",
     srcs = [
-        "Comms/IClient.h",
         "Comms/IPC/Client.cpp",
         "Comms/IPC/Client.h",
         "CustomAllocator/allocator.h",
     ],
-    hdrs = ["CustomAllocator/allocator.h"],
+    hdrs = [
+        "CustomAllocator/allocator.h",
+        "Comms/IPC/Client.h",
+    ],
     visibility = ["//visibility:public"],
 )
 
